@@ -133,15 +133,20 @@ export default Component.extend({
     const handler = ACE_HANDLERS[key];
     const { editor } = this;
 
-    if (handler === 'editor') {
-      editor.setOption(key, value);
-    } else if (handler === 'session') {
-      editor.session.setOption(key, value);
-    } else if (handler === 'renderer') {
-      editor.renderer.setOption(key, value);
-    } else if (typeof handler === 'function') {
-      handler.call(this, editor, value);
+    try{
+      if (handler === 'editor') {
+        editor.setOption(key, value);
+      } else if (handler === 'session') {
+        editor.session.setOption(key, value);
+      } else if (handler === 'renderer') {
+        editor.renderer.setOption(key, value);
+      } else if (typeof handler === 'function') {
+        handler.call(this, editor, value);
+      }
+    } catch(e){
+      warn(`Error _syncAceProperty`, false, { id: 'ember-ace.sync-ace-property' });
     }
+
   },
 
   _withUpdatesSilenced(callback) {
